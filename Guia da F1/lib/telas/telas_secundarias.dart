@@ -24,28 +24,18 @@ class _TelaNoticiasState extends State<TelaNoticias> {
 
   Future<void> _buscarNoticias() async {
     try {
-      // Feed 1: Motorsport (O original)
+      // Feed 1: Motorsport
       String urlRss = 'https%3A%2F%2Fbr.motorsport.com%2Frss%2Ff1%2Fnews%2F';
-
-      // Feed 2: Grande Prêmio (Se o Motorsport falhar, comente a linha acima e descomente a de baixo)
-      // String urlRss = 'https%3A%2F%2Fwww.grandepremio.com.br%2Ff1%2Ffeed%2F';
 
       final url = Uri.parse(
         'https://api.rss2json.com/v1/api.json?rss_url=$urlRss',
       );
 
-      print('Acessando API de Notícias...');
       final response = await http.get(url);
-
-      print('Status Code: ${response.statusCode}');
-      print(
-        'Resposta da API: ${response.body}',
-      ); // Isso vai mostrar o erro exato no seu terminal!
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
 
-        // O rss2json retorna um 'status': 'ok' quando dá certo
         if (data['status'] == 'ok') {
           if (mounted) {
             setState(() {
@@ -54,17 +44,12 @@ class _TelaNoticiasState extends State<TelaNoticias> {
             });
           }
         } else {
-          print('A API retornou um erro interno: ${data['message']}');
           if (mounted) setState(() => _carregando = false);
         }
       } else {
-        print('Erro de servidor. Código: ${response.statusCode}');
         if (mounted) setState(() => _carregando = false);
       }
     } catch (e) {
-      print(
-        'Erro no Try-Catch (Provavelmente sem internet ou erro de parse): $e',
-      );
       if (mounted) setState(() => _carregando = false);
     }
   }
@@ -94,13 +79,24 @@ class _TelaNoticiasState extends State<TelaNoticias> {
                   clipBehavior: Clip.antiAlias,
                   child: Stack(
                     children: [
+                      // SE TEM IMAGEM, MOSTRA A IMAGEM. SE NÃO, MOSTRA UM FUNDO CINZA
                       if (hasImage)
                         Image.network(
                           noticia['thumbnail'],
                           height: 220,
                           width: double.infinity,
                           fit: BoxFit.cover,
+                        )
+                      else
+                        Container(
+                          height: 140,
+                          width: double.infinity,
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.grey[900]
+                              : Colors.grey[300],
                         ),
+
+                      // DEGRADÊ ESCURO POR CIMA
                       if (hasImage)
                         Container(
                           height: 220,
@@ -115,6 +111,8 @@ class _TelaNoticiasState extends State<TelaNoticias> {
                             ),
                           ),
                         ),
+
+                      // TEXTOS DA NOTÍCIA
                       Positioned(
                         bottom: 16,
                         left: 16,
@@ -132,7 +130,7 @@ class _TelaNoticiasState extends State<TelaNoticias> {
                                 borderRadius: BorderRadius.circular(4),
                               ),
                               child: const Text(
-                                "URGENTE",
+                                "NOTÍCIA",
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 10,
@@ -1473,7 +1471,7 @@ class TelaPerfilLenda extends StatelessWidget {
   }
 }
 
-// --- 10. GRÁFICO DE TELEMETRIA E PERFIL DO PILOTO (SEM SISTEMA ID) ---
+// --- 10. GRÁFICO DE TELEMETRIA E PERFIL DO PILOTO ---
 class TelaPerfilPiloto extends StatelessWidget {
   final dynamic piloto;
   const TelaPerfilPiloto({super.key, required this.piloto});
@@ -1498,7 +1496,7 @@ class TelaPerfilPiloto extends StatelessWidget {
         return spots;
       }
     } catch (e) {
-      // Retorna lista vazia em caso de falha de rede
+      // Retorna lista vazia
     }
     return [];
   }
