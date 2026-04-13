@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'tela_principal.dart';
 
 class TelaAutenticacao extends StatefulWidget {
@@ -70,11 +71,11 @@ class _TelaAutenticacaoState extends State<TelaAutenticacao>
                   children: [
                     _Formulario(
                       isLogin: true,
-                      aoEntrar: () => _navegarParaPrincipal(context),
+                      aoEntrarSucesso: () => _navegarParaPrincipal(context),
                     ),
                     _Formulario(
                       isLogin: false,
-                      aoEntrar: () => _navegarParaPrincipal(context),
+                      aoEntrarSucesso: () => _navegarParaPrincipal(context),
                     ),
                   ],
                 ),
@@ -100,10 +101,76 @@ class _TelaAutenticacaoState extends State<TelaAutenticacao>
   }
 }
 
-class _Formulario extends StatelessWidget {
+class _Formulario extends StatefulWidget {
   final bool isLogin;
-  final VoidCallback aoEntrar;
-  const _Formulario({required this.isLogin, required this.aoEntrar});
+  final VoidCallback aoEntrarSucesso;
+
+  const _Formulario({required this.isLogin, required this.aoEntrarSucesso});
+
+  @override
+  State<_Formulario> createState() => _FormularioState();
+}
+
+class _FormularioState extends State<_Formulario> {
+  // Controladores para capturar o que for digitado (com dados de teste já preenchidos)
+  final _emailController = TextEditingController(text: 'lucasmoura@gmail.com');
+  final _senhaController = TextEditingController(text: '7230');
+  final _nomeController = TextEditingController();
+
+  bool _isLoading = false;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  // Lógica principal de comunicação com o Firebase
+  Future<void> _autenticarFirebase() async {
+    setState(() => _isLoading = true);
+
+    try {
+      if (widget.isLogin) {
+        // Tenta fazer o Login
+        await _auth.signInWithEmailAndPassword(
+          email: _emailController.text.trim(),
+          password: _senhaController.text.trim(),
+        );
+      } else {
+        // Tenta criar uma conta nova
+        await _auth.createUserWithEmailAndPassword(
+          email: _emailController.text.trim(),
+          password: _senhaController.text.trim(),
+        );
+      }
+
+      // Se chegou aqui, a senha estava certa ou a conta foi criada!
+      widget.aoEntrarSucesso();
+    } on FirebaseAuthException catch (e) {
+      // Se deu erro (senha errada, usuário não existe, etc), mostra aviso vermelho
+      String mensagemErro = 'Erro de autenticação';
+      if (e.code == 'user-not-found' || e.code == 'invalid-credential') {
+        mensagemErro = 'E-mail ou senha incorretos.';
+      } else if (e.code == 'email-already-in-use') {
+        mensagemErro = 'Este e-mail já está cadastrado.';
+      } else if (e.code == 'weak-password') {
+        mensagemErro = 'A senha deve ter pelo menos 6 caracteres.';
+      }
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(mensagemErro), backgroundColor: Colors.red),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _senhaController.dispose();
+    _nomeController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -113,40 +180,50 @@ class _Formulario extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            if (!isLogin) ...[
-              _campoTexto("Nome Completo", Icons.person),
+            if (!widget.isLogin) ...[
+              _campoTexto(
+                "Nome Completo",
+                Icons.person,
+                _nomeController,
+                false,
+              ),
               const SizedBox(height: 16),
             ],
-            _campoTexto("E-mail", Icons.email),
+            _campoTexto("E-mail", Icons.email, _emailController, false),
             const SizedBox(height: 16),
-            _campoTexto("Senha", Icons.lock, obscuro: true),
+            _campoTexto("Senha", Icons.lock, _senhaController, true),
             const SizedBox(height: 30),
-            SizedBox(
-              width: double.infinity,
-              height: 55,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red[700],
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
+
+            // Se estiver carregando, mostra o círculo de progresso. Se não, mostra o botão.
+            _isLoading
+                ? CircularProgressIndicator(color: Colors.red[700])
+                : SizedBox(
+                    width: double.infinity,
+                    height: 55,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red[700],
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        elevation: 5,
+                      ),
+                      onPressed:
+                          _autenticarFirebase, // Agora chama a função do Firebase
+                      child: Text(
+                        widget.isLogin ? "ENTRAR" : "CRIAR CONTA",
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
                   ),
-                  elevation: 5,
-                ),
-                onPressed: aoEntrar,
-                child: Text(
-                  isLogin ? "ENTRAR" : "CRIAR CONTA",
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
             const SizedBox(height: 20),
-            if (isLogin)
+            if (widget.isLogin && !_isLoading)
               TextButton(
-                onPressed: aoEntrar,
+                onPressed: widget.aoEntrarSucesso, // Visitante passa direto
                 child: const Text(
                   "Acessar como Visitante",
                   style: TextStyle(
@@ -161,8 +238,14 @@ class _Formulario extends StatelessWidget {
     );
   }
 
-  Widget _campoTexto(String rotulo, IconData icone, {bool obscuro = false}) {
+  Widget _campoTexto(
+    String rotulo,
+    IconData icone,
+    TextEditingController controlador,
+    bool obscuro,
+  ) {
     return TextField(
+      controller: controlador, // Agora o campo guarda o que foi digitado
       obscureText: obscuro,
       style: const TextStyle(color: Colors.white),
       decoration: InputDecoration(
