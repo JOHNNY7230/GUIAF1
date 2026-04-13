@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "229003939699",
+    "project_id": "testebd-e96ed",
+    "storage_bucket": "testebd-e96ed.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:229003939699:android:cadd0f026c3fe0fba73f06",
+        "android_client_info": {
+          "package_name": "com.example.autotesteflutter"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBac4oDAvMDY9ZIt5mFwedLSRpHTummRUM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:229003939699:android:098e68ec33066791a73f06",
+        "android_client_info": {
+          "package_name": "com.example.testebd"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBac4oDAvMDY9ZIt5mFwedLSRpHTummRUM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

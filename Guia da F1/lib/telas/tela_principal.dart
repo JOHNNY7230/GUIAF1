@@ -19,7 +19,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
     TelaPainel(),
     TelaGridPesquisa(),
     TelaClassificacaoCompleta(),
-    TelaRadioList(),
+    TelaEquipes(), // <-- Rádio substituído por Equipes na barra inferior
     TelaFavoritosAvancada(),
   ];
 
@@ -201,6 +201,27 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                       MaterialPageRoute(builder: (_) => const TelaDicionario()),
                     );
                   }),
+
+                  // <-- RÁDIO ADICIONADO AQUI NO MENU HAMBÚRGUER -->
+                  _menuItem(
+                    context,
+                    Icons.headset_mic,
+                    "Rádio das Equipes",
+                    () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => Scaffold(
+                            appBar: AppBar(
+                              title: const Text("Interceptação de Rádio"),
+                            ),
+                            body: const TelaRadioList(),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
                 ],
               ),
             ),
@@ -233,7 +254,6 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
 
       body: _telas[_indiceAtual],
 
-      // O ERRO ESTAVA AQUI: Faltava o "bottomNavigationBar:"
       bottomNavigationBar: NavigationBar(
         selectedIndex: _indiceAtual,
         onDestinationSelected: (index) {
@@ -259,10 +279,11 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
             selectedIcon: Icon(Icons.emoji_events, color: Colors.red),
             label: "Tabela",
           ),
+          // <-- EQUIPES SUBSTITUINDO O RÁDIO NA BARRA INFERIOR -->
           NavigationDestination(
-            icon: Icon(Icons.headset_mic_outlined),
-            selectedIcon: Icon(Icons.headset_mic, color: Colors.red),
-            label: "Rádio",
+            icon: Icon(Icons.directions_car_outlined),
+            selectedIcon: Icon(Icons.directions_car, color: Colors.red),
+            label: "Equipes",
           ),
           NavigationDestination(
             icon: Icon(Icons.star_border),

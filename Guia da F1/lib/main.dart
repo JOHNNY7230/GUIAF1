@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
 import 'telas/tela_autenticacao.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() => runApp(const GuiaF1App());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  runApp(const GuiaF1App());
+}
 
 class GuiaF1App extends StatefulWidget {
   const GuiaF1App({super.key});
@@ -52,6 +60,4 @@ class _GuiaF1AppState extends State<GuiaF1App> {
       home: TelaAutenticacao(aoAlternarTema: alternarTema),
     );
   }
-
-  //SLK//
 }
