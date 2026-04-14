@@ -1,61 +1,58 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart'; // Mantido para o Auth
+import 'firebase_options.dart'; // Certifique-se de que este arquivo existe (gerado pelo FlutterFire CLI)
 import 'telas/tela_autenticacao.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
 
 void main() async {
+  // Garante que os bindings do Flutter estão inicializados antes do Firebase
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  // Inicializa apenas o Firebase Core (necessário para o Firebase Auth)
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  } catch (e) {
+    // Log silencioso caso falhe ao inicializar (evita quebrar o app inteiro se houver bloqueio extremo)
+    debugPrint('Erro ao inicializar o Firebase: $e');
+  }
+
   runApp(const GuiaF1App());
 }
 
 class GuiaF1App extends StatefulWidget {
   const GuiaF1App({super.key});
+
   @override
   State<GuiaF1App> createState() => _GuiaF1AppState();
 }
 
 class _GuiaF1AppState extends State<GuiaF1App> {
-  ThemeMode _modoTema = ThemeMode.light;
+  ThemeMode _temaAtual = ThemeMode.dark;
 
-  void alternarTema(bool isDark) {
-    setState(() => _modoTema = isDark ? ThemeMode.dark : ThemeMode.light);
+  void _alternarTema(bool isDarkMode) {
+    setState(() {
+      _temaAtual = isDarkMode ? ThemeMode.dark : ThemeMode.light;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Guia da F1',
       debugShowCheckedModeBanner: false,
-      themeMode: _modoTema,
+      title: 'Guia F1',
       theme: ThemeData(
+        useMaterial3: true,
+        colorSchemeSeed: Colors.red,
         brightness: Brightness.light,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.red,
-          primary: Colors.red[800],
-        ),
-        scaffoldBackgroundColor: Colors.grey[100],
-        appBarTheme: AppBarTheme(
-          backgroundColor: Colors.red[800],
-          foregroundColor: Colors.white,
-          elevation: 0,
-        ),
       ),
       darkTheme: ThemeData(
+        useMaterial3: true,
+        colorSchemeSeed: Colors.red,
         brightness: Brightness.dark,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.red,
-          brightness: Brightness.dark,
-          primary: Colors.red[600],
-        ),
-        scaffoldBackgroundColor: const Color(0xFF121212),
-        appBarTheme: AppBarTheme(
-          backgroundColor: Colors.grey[900],
-          foregroundColor: Colors.white,
-          elevation: 0,
-        ),
       ),
-      home: TelaAutenticacao(aoAlternarTema: alternarTema),
+      themeMode: _temaAtual,
+      home: TelaAutenticacao(aoAlternarTema: _alternarTema),
     );
   }
 }
