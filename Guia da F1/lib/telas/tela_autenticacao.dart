@@ -21,69 +21,94 @@ class _TelaAutenticacaoState extends State<TelaAutenticacao>
   }
 
   @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          color: Colors.black,
-          image: DecorationImage(
-            image: const AssetImage('assets/WPPF1.jpg'),
-            fit: BoxFit.cover,
-            colorFilter: ColorFilter.mode(
-              Colors.black.withValues(alpha: 0.7),
-              BlendMode.darken,
+    return Stack(
+      children: [
+        // 1. CAMADA DE FUNDO (Fixa, não amassa com o teclado)
+        Positioned.fill(
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.black,
+              image: DecorationImage(
+                image: const AssetImage('assets/WPPF1.jpg'),
+                fit: BoxFit.cover,
+                colorFilter: ColorFilter.mode(
+                  Colors.black.withOpacity(0.75),
+                  BlendMode.darken,
+                ),
+              ),
             ),
           ),
         ),
-        child: SafeArea(
-          child: Column(
-            children: [
-              const SizedBox(height: 40),
-              Icon(Icons.sports_motorsports, size: 80, color: Colors.red[600]),
-              const SizedBox(height: 10),
-              const Text(
-                "GUIA DA F1",
-                style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.w900,
-                  color: Colors.white,
-                  letterSpacing: 3,
+
+        // 2. CAMADA DO APLICATIVO (Rola por cima da imagem)
+        Scaffold(
+          backgroundColor: Colors.transparent, // Deixa a imagem aparecer
+          body: SafeArea(
+            child: Column(
+              children: [
+                const SizedBox(height: 20),
+                // Cabeçalho
+                Icon(
+                  Icons.sports_motorsports,
+                  size: 70,
+                  color: Colors.red[600],
                 ),
-              ),
-              const Text(
-                "Acelere seus conhecimentos",
-                style: TextStyle(color: Colors.white70, fontSize: 16),
-              ),
-              const SizedBox(height: 30),
-              TabBar(
-                controller: _tabController,
-                indicatorColor: Colors.red[600],
-                labelColor: Colors.white,
-                unselectedLabelColor: Colors.white54,
-                tabs: const [
-                  Tab(text: "ENTRAR"),
-                  Tab(text: "CADASTRAR"),
-                ],
-              ),
-              Expanded(
-                child: TabBarView(
+                const SizedBox(height: 5),
+                const Text(
+                  "GUIA DA F1",
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.w900,
+                    color: Colors.white,
+                    letterSpacing: 2,
+                  ),
+                ),
+                const Text(
+                  "Acelere seus conhecimentos",
+                  style: TextStyle(color: Colors.white70, fontSize: 14),
+                ),
+                const SizedBox(height: 20),
+
+                // Abas (Guias)
+                TabBar(
                   controller: _tabController,
-                  children: [
-                    _Formulario(
-                      isLogin: true,
-                      aoEntrarSucesso: () => _navegarParaPrincipal(context),
-                    ),
-                    _Formulario(
-                      isLogin: false,
-                      aoEntrarSucesso: () => _navegarParaPrincipal(context),
-                    ),
+                  indicatorColor: Colors.red[600],
+                  labelColor: Colors.white,
+                  unselectedLabelColor: Colors.white54,
+                  tabs: const [
+                    Tab(text: "ENTRAR"),
+                    Tab(text: "CADASTRAR"), // Padronizado em PT-BR
                   ],
                 ),
-              ),
-            ],
+
+                // Área dos Formulários
+                Expanded(
+                  child: TabBarView(
+                    controller: _tabController,
+                    children: [
+                      _Formulario(
+                        isLogin: true,
+                        aoEntrarSucesso: () => _navegarParaPrincipal(context),
+                      ),
+                      _Formulario(
+                        isLogin: false,
+                        aoEntrarSucesso: () => _navegarParaPrincipal(context),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
-      ),
+      ],
     );
   }
 
@@ -112,55 +137,57 @@ class _Formulario extends StatefulWidget {
 }
 
 class _FormularioState extends State<_Formulario> {
-  // Controladores para capturar o que for digitado (com dados de teste já preenchidos)
-  final _emailController = TextEditingController(text: 'lucasmoura@gmail.com');
-  final _senhaController = TextEditingController(text: '7230');
+  final _emailController = TextEditingController();
+  final _senhaController = TextEditingController();
   final _nomeController = TextEditingController();
 
   bool _isLoading = false;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  // Lógica principal de comunicação com o Firebase
   Future<void> _autenticarFirebase() async {
+    // Validação de campos vazios
+    if (_emailController.text.trim().isEmpty ||
+        _senhaController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Por favor, preencha todos os campos!'),
+          backgroundColor: Colors.orange,
+        ),
+      );
+      return;
+    }
+
     setState(() => _isLoading = true);
 
     try {
       if (widget.isLogin) {
-        // Tenta fazer o Login
+        // Rotina de Login
         await _auth.signInWithEmailAndPassword(
           email: _emailController.text.trim(),
           password: _senhaController.text.trim(),
         );
       } else {
-        // Tenta criar uma conta nova
+        // Rotina de Cadastro
         UserCredential credencial = await _auth.createUserWithEmailAndPassword(
           email: _emailController.text.trim(),
           password: _senhaController.text.trim(),
         );
-
-        // GRAVA OS DADOS NO BANCO AUTOMATICAMENTE
-        await FirebaseFirestore.instance
-            .collection('usuarios')
-            .doc(credencial.user!.uid)
-            .set({
-              'nome': _nomeController.text.trim(),
-              'email': _emailController.text.trim(),
-              'equipe_favorita': '', // O usuário pode escolher isso depois
-              'criado_em': FieldValue.serverTimestamp(),
-            });
+        // Atualiza o nome do usuário sem usar banco de dados externo
+        await credencial.user?.updateDisplayName(_nomeController.text.trim());
       }
 
-      // Se chegou aqui, a senha estava certa ou a conta foi criada!
       widget.aoEntrarSucesso();
     } on FirebaseAuthException catch (e) {
-      // Se deu erro (senha errada, usuário não existe, etc), mostra aviso vermelho
-      String mensagemErro = 'Erro de autenticação';
+      // Mensagens de Erro Traduzidas (PT-BR)
+      String mensagemErro = 'Ocorreu um erro de autenticação.';
       if (e.code == 'user-not-found' || e.code == 'invalid-credential') {
         mensagemErro = 'E-mail ou senha incorretos.';
       } else if (e.code == 'email-already-in-use') {
         mensagemErro = 'Este e-mail já está cadastrado.';
       } else if (e.code == 'weak-password') {
-        mensagemErro = 'A senha deve ter pelo menos 6 caracteres.';
+        mensagemErro = 'A senha deve ter no mínimo 6 caracteres.';
+      } else if (e.code == 'invalid-email') {
+        mensagemErro = 'O formato do e-mail é inválido.';
       }
 
       if (mounted) {
@@ -187,7 +214,8 @@ class _FormularioState extends State<_Formulario> {
   Widget build(BuildContext context) {
     return Center(
       child: SingleChildScrollView(
-        padding: const EdgeInsets.all(30.0),
+        physics: const BouncingScrollPhysics(),
+        padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 20.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -205,7 +233,6 @@ class _FormularioState extends State<_Formulario> {
             _campoTexto("Senha", Icons.lock, _senhaController, true),
             const SizedBox(height: 30),
 
-            // Se estiver carregando, mostra o círculo de progresso. Se não, mostra o botão.
             _isLoading
                 ? CircularProgressIndicator(color: Colors.red[700])
                 : SizedBox(
@@ -219,27 +246,30 @@ class _FormularioState extends State<_Formulario> {
                         ),
                         elevation: 5,
                       ),
-                      onPressed:
-                          _autenticarFirebase, // Agora chama a função do Firebase
+                      onPressed: _autenticarFirebase,
                       child: Text(
-                        widget.isLogin ? "ENTRAR" : "CRIAR CONTA",
+                        widget.isLogin ? "ENTRAR" : "CADASTRAR",
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
+                          letterSpacing: 1.5,
                         ),
                       ),
                     ),
                   ),
             const SizedBox(height: 20),
+
             if (widget.isLogin && !_isLoading)
               TextButton(
-                onPressed: widget.aoEntrarSucesso, // Visitante passa direto
+                onPressed: widget.aoEntrarSucesso,
                 child: const Text(
                   "Acessar como Visitante",
                   style: TextStyle(
                     color: Colors.white70,
+                    fontSize: 16,
                     decoration: TextDecoration.underline,
+                    decorationColor: Colors.white70,
                   ),
                 ),
               ),
@@ -256,7 +286,7 @@ class _FormularioState extends State<_Formulario> {
     bool obscuro,
   ) {
     return TextField(
-      controller: controlador, // Agora o campo guarda o que foi digitado
+      controller: controlador,
       obscureText: obscuro,
       style: const TextStyle(color: Colors.white),
       decoration: InputDecoration(
@@ -264,7 +294,7 @@ class _FormularioState extends State<_Formulario> {
         labelStyle: const TextStyle(color: Colors.white70),
         prefixIcon: Icon(icone, color: Colors.white70),
         filled: true,
-        fillColor: Colors.white.withValues(alpha: 0.1),
+        fillColor: Colors.white.withOpacity(0.15),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15),
           borderSide: BorderSide.none,

@@ -2,22 +2,6 @@ plugins {
     id("com.google.gms.google-services") version "4.3.15" apply false
 }
 
-allprojects {
-    repositories {
-        // Força o download por HTTP ignorando o certificado do firewall
-        maven {
-            url = uri("http://dl.google.com/dl/android/maven2/")
-            isAllowInsecureProtocol = true
-        }
-        maven {
-            url = uri("http://repo.maven.apache.org/maven2/")
-            isAllowInsecureProtocol = true
-        }
-        google()
-        mavenCentral()
-    }
-}
-
 val newBuildDir: Directory =
     rootProject.layout.buildDirectory
         .dir("../../build")
@@ -28,6 +12,7 @@ subprojects {
     val newSubprojectBuildDir: Directory = newBuildDir.dir(project.name)
     project.layout.buildDirectory.value(newSubprojectBuildDir)
 }
+
 subprojects {
     project.evaluationDependsOn(":app")
 }
