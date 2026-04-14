@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'tela_principal.dart';
 
 class TelaAutenticacao extends StatefulWidget {
@@ -133,10 +134,21 @@ class _FormularioState extends State<_Formulario> {
         );
       } else {
         // Tenta criar uma conta nova
-        await _auth.createUserWithEmailAndPassword(
+        UserCredential credencial = await _auth.createUserWithEmailAndPassword(
           email: _emailController.text.trim(),
           password: _senhaController.text.trim(),
         );
+
+        // GRAVA OS DADOS NO BANCO AUTOMATICAMENTE
+        await FirebaseFirestore.instance
+            .collection('usuarios')
+            .doc(credencial.user!.uid)
+            .set({
+              'nome': _nomeController.text.trim(),
+              'email': _emailController.text.trim(),
+              'equipe_favorita': '', // O usuário pode escolher isso depois
+              'criado_em': FieldValue.serverTimestamp(),
+            });
       }
 
       // Se chegou aqui, a senha estava certa ou a conta foi criada!
