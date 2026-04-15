@@ -385,12 +385,13 @@ class _TelaCalendarioState extends State<TelaCalendario> {
 class TelaEquipes extends StatelessWidget {
   const TelaEquipes({super.key});
 
-  // DADOS TÉCNICOS E BIOGRAFIAS RICAS - ERA 2026 (11 EQUIPAS)
+  // DADOS TÉCNICOS E LOGOS - ERA 2026 (11 EQUIPAS)
   final List<Map<String, dynamic>> _equipes = const [
     {
       "nome": "Scuderia Ferrari HP",
+      "logo": "assets/equipes/ferrari.png",
       "historia":
-          "A equipa mais antiga e icónica da F1 entra na nova era de regulamentos com a dupla mais mediática da história: o heptacampeão Lewis Hamilton e o 'Príncipe de Mónaco', Charles Leclerc. O foco em Maranello está na integração perfeita da nova unidade de potência, visando acabar com o longo jejum de títulos sob o comando de Fred Vasseur.",
+          "A equipa mais antiga e icónica da F1 entra na nova era com Lewis Hamilton e Charles Leclerc. Foco total na integração da nova unidade de potência para encerrar o jejum de títulos.",
       "cor": Colors.red,
       "base": "Maranello, Itália",
       "motor": "Ferrari (2026 Spec)",
@@ -398,26 +399,29 @@ class TelaEquipes extends StatelessWidget {
     },
     {
       "nome": "Audi F1 Team",
+      "logo": "assets/equipes/audi.png",
       "historia":
-          "A aguardada sucessora da histórica Sauber. Marca a entrada titânica do Grupo Volkswagen na Fórmula 1 como equipa de fábrica. Com a contratação do campeão da F2, o brasileiro Gabriel Bortoleto, e a experiência de Nico Hülkenberg, a Audi promete revolucionar a eficiência térmica e elétrica com o seu motor fabricado em Neuburg.",
+          "Sucessora oficial da Sauber e entrada do Grupo Volkswagen como equipa de fábrica. Com o brasileiro Gabriel Bortoleto, a Audi promete revolucionar a tecnologia elétrica dos motores.",
       "cor": Colors.blueGrey,
-      "base": "Neuburg, Alemanha / Hinwil, Suíça",
+      "base": "Neuburg, Alemanha",
       "motor": "Audi Powertrains",
       "titulos": "Estreante",
     },
     {
       "nome": "Cadillac F1 Team",
+      "logo": "assets/equipes/cadillac.png",
       "historia":
-          "A nova e explosiva 11ª equipa do paddock. Representa a entrada massiva da General Motors no Mundial. Liderada pela família Andretti, a Cadillac traz o poder americano para o grid, expandindo o campeonato para 22 carros e prometendo abalar as estruturas das equipas tradicionais desde a primeira corrida.",
+          "A nova 11ª equipa do grid, trazendo o poder da General Motors e da família Andretti para o Paddock, expandindo o campeonato para 22 carros.",
       "cor": Colors.white,
-      "base": "Warren, EUA / Silverstone, RU",
+      "base": "Warren, EUA / RU",
       "motor": "Cadillac (GM)",
       "titulos": "Estreante",
     },
     {
       "nome": "McLaren Formula 1 Team",
+      "logo": "assets/equipes/mclaren.jpg",
       "historia":
-          "Mantendo a linhagem do laranja papaya, a McLaren é o símbolo da estabilidade. Lando Norris e Oscar Piastri formam uma das duplas mais letais do grid. Sob a direção de Andrea Stella, a equipa confia na sua excelência aerodinâmica e no fornecimento da nova geração de motores Mercedes para lutar pelo topo.",
+          "Mantendo a estabilidade com Norris e Piastri. A equipa aposta na sua excelência aerodinâmica e nos novos motores Mercedes para dominar o regulamento de 2026.",
       "cor": Colors.orange,
       "base": "Woking, Reino Unido",
       "motor": "Mercedes",
@@ -425,18 +429,19 @@ class TelaEquipes extends StatelessWidget {
     },
     {
       "nome": "Oracle Red Bull Racing",
+      "logo": "assets/equipes/redbull.png",
       "historia":
-          "Uma equipa em profunda transformação. A era pós-Adrian Newey começa com o maior desafio da sua história: fabricar a sua própria unidade de potência em parceria com a Ford (Red Bull Powertrains). Com Max Verstappen ao volante, a equipa tenta provar que consegue dominar o novo regulamento de 2026 e manter a hegemonia que conquistou na década anterior.",
+          "A era pós-Newey começa com o desafio de fabricar o próprio motor em parceria com a Ford. Verstappen lidera a tentativa de manter a hegemonia da marca.",
       "cor": Colors.blue,
       "base": "Milton Keynes, Reino Unido",
       "motor": "Red Bull Ford",
-      "titulos":
-          "6 Construtores", // Títulos de 2010, 2011, 2012, 2013, 2022, 2023
+      "titulos": "6 Construtores",
     },
     {
       "nome": "Mercedes-AMG PETRONAS",
+      "logo": "assets/equipes/mercedes.png",
       "historia":
-          "O início de um novo capítulo após a saída de Hamilton. George Russell assume o papel de líder, acompanhado pelo prodígio italiano Kimi Antonelli. A Mercedes aposta todas as fichas na sua vasta experiência em motores híbridos para criar a unidade de potência mais forte do novo regulamento de 2026.",
+          "Início do capítulo pós-Hamilton com George Russell e Kimi Antonelli. A Mercedes aposta na sua experiência híbrida para criar o motor mais forte da nova era.",
       "cor": Colors.teal,
       "base": "Brackley, Reino Unido",
       "motor": "Mercedes",
@@ -444,8 +449,9 @@ class TelaEquipes extends StatelessWidget {
     },
     {
       "nome": "Aston Martin Aramco",
+      "logo": "assets/equipes/astonmartin.png",
       "historia":
-          "O projeto bilionário de Lawrence Stroll atinge o seu clímax. Agora com o estatuto de equipa de fábrica da Honda (os mesmos motores que deram o título à Red Bull) e com Adrian Newey nos bastidores desenhando o carro, Fernando Alonso tem a derradeira arma para o seu tão sonhado terceiro título mundial.",
+          "Equipa de fábrica da Honda e contando com Adrian Newey nos bastidores. Fernando Alonso tem aqui a sua melhor chance para o tricampeonato mundial.",
       "cor": Colors.green,
       "base": "Silverstone, Reino Unido",
       "motor": "Honda",
@@ -453,8 +459,9 @@ class TelaEquipes extends StatelessWidget {
     },
     {
       "nome": "Williams Racing",
+      "logo": "assets/equipes/williams.png",
       "historia":
-          "O ressurgimento de uma lenda. Com a liderança visionária de James Vowles, a equipa britânica garantiu uma dupla de peso: a agressividade de Alex Albon e a inteligência tática de Carlos Sainz. A Williams foca-se em maximizar a parceria técnica com a Mercedes para voltar aos pódios.",
+          "Ressurgimento sob James Vowles com uma dupla de peso: Alex Albon e Carlos Sainz. A Williams foca em maximizar a parceria técnica com a Mercedes.",
       "cor": Colors.indigo,
       "base": "Grove, Reino Unido",
       "motor": "Mercedes",
@@ -462,26 +469,29 @@ class TelaEquipes extends StatelessWidget {
     },
     {
       "nome": "BWT Alpine F1 Team",
+      "logo": "assets/equipes/alpine.png",
       "historia":
-          "A equipa francesa passou por intensas reestruturações. Agora apoiada pela dupla Pierre Gasly e o jovem Jack Doohan, a Alpine procura encontrar a consistência que lhe tem faltado, focando-se em extrair o máximo do novo regulamento de chassis para compensar os desafios de desenvolvimento.",
+          "Com Pierre Gasly e Jack Doohan, a equipa francesa busca consistência e eficiência no novo regulamento de chassis para compensar desafios passados.",
       "cor": Colors.blueAccent,
-      "base": "Enstone, Reino Unido / Viry, França",
+      "base": "Enstone, Reino Unido",
       "motor": "Alpine",
-      "titulos": "2 Construtores (como Renault)",
+      "titulos": "2 Construtores",
     },
     {
       "nome": "MoneyGram Haas F1 Team",
+      "logo": "assets/equipes/haas.png",
       "historia":
-          "A equipa americana fortaleceu-se com a sua nova parceria técnica com a Toyota, além dos laços contínuos com a Ferrari. Com a experiência de Esteban Ocon e a rapidez do jovem britânico Oliver Bearman, a Haas tenta deixar definitivamente o fundo do grid.",
+          "Parceria renovada com Toyota e Ferrari. Aposta na experiência de Esteban Ocon e na juventude de Oliver Bearman para subir no pelotão.",
       "cor": Colors.grey,
-      "base": "Kannapolis, EUA / Banbury, RU",
+      "base": "Kannapolis, EUA",
       "motor": "Ferrari",
       "titulos": "Nenhum",
     },
     {
       "nome": "Visa Cash App RB",
+      "logo": "assets/equipes/vcarb.png",
       "historia":
-          "A equipa 'irmã' da Red Bull. Serve como o laboratório de excelência para os motores Red Bull-Ford e a plataforma de lançamento para jovens talentos como Yuki Tsunoda e Liam Lawson. O objetivo é competir consistentemente no topo do pelotão intermediário.",
+          "Laboratório para os motores Red Bull-Ford e plataforma para jovens talentos como Tsunoda e Lawson. Foco em competir no topo do pelotão intermediário.",
       "cor": Colors.blueGrey,
       "base": "Faenza, Itália",
       "motor": "Red Bull Ford",
@@ -511,14 +521,19 @@ class TelaEquipes extends StatelessWidget {
               borderRadius: BorderRadius.circular(20),
             ),
             child: ExpansionTile(
-              leading: CircleAvatar(
-                backgroundColor: eq['cor'],
-                radius: 20,
-                child: Text(
-                  eq['nome'][0],
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
+              // O novo container que acomoda as logos sem as cortar!
+              leading: Container(
+                width: 52,
+                height: 52,
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Image.asset(
+                    eq['logo'],
+                    fit: BoxFit.contain, // O segredo para não cortar a imagem
                   ),
                 ),
               ),

@@ -18,6 +18,9 @@ class _TelaPerfilState extends State<TelaPerfil> {
   String _equipeFavorita = 'Nenhuma';
   String _pilotoFavorito = 'Nenhum';
 
+  // O SEGREDO PARA NÃO MISTURAR PERFIS: Pega o ID único do usuário logado ou usa 'guest'
+  String get _userPrefix => _auth.currentUser?.uid ?? 'guest';
+
   // Nomes Oficiais Atualizados (Era 2026)
   final List<String> _equipesF1 = [
     'Nenhuma',
@@ -34,7 +37,7 @@ class _TelaPerfilState extends State<TelaPerfil> {
     'Cadillac F1 Team', // A nova 11ª equipe do grid!
   ];
 
-  // Grid de 2026 (Expandido para 22 vagas)
+  // A TUA LISTA ORIGINAL MANTIDA AQUI (Expandido para 22 vagas)
   final List<String> _pilotosF1 = [
     'Nenhum',
     'Gabriel Bortoleto', // Agora oficial da Audi
@@ -47,18 +50,20 @@ class _TelaPerfilState extends State<TelaPerfil> {
     'Fernando Alonso',
     'Carlos Sainz',
     'Nico Hülkenberg',
-    'Yuki Tsunoda',
     'Alexander Albon',
     'Liam Lawson',
     'Esteban Ocon',
     'Pierre Gasly',
     'Oliver Bearman',
-    'Jack Doohan',
     'Kimi Antonelli',
     'Franco Colapinto',
     'Isack Hadjar',
-    'Colton Herta', // Forte candidato para a vaga da Cadillac
+    'Arvid Lindblab',
+    'Sergio Pérez',
+    'Lance Stroll',
+    'Valtteri Bottas',
   ];
+
   @override
   void initState() {
     super.initState();
@@ -69,6 +74,7 @@ class _TelaPerfilState extends State<TelaPerfil> {
     final user = _auth.currentUser;
     if (mounted) {
       setState(() {
+        // Se for visitante, mostra os textos genéricos que definiste
         _nomeUsuario = user?.displayName ?? 'Piloto Sem Nome';
         _emailUsuario = user?.email ?? 'visitante@f1.com';
       });
@@ -77,15 +83,18 @@ class _TelaPerfilState extends State<TelaPerfil> {
     final prefs = await SharedPreferences.getInstance();
     if (mounted) {
       setState(() {
-        _bioController.text = prefs.getString('bio_usuario') ?? '';
+        // Busca os dados usando o prefixo único do utilizador
+        _bioController.text = prefs.getString('${_userPrefix}_bio') ?? '';
 
         // Carrega a equipe, se não existir na lista atualizada, volta para 'Nenhuma'
-        String equipeSalva = prefs.getString('equipe_favorita') ?? 'Nenhuma';
+        String equipeSalva =
+            prefs.getString('${_userPrefix}_equipe') ?? 'Nenhuma';
         _equipeFavorita = _equipesF1.contains(equipeSalva)
             ? equipeSalva
             : 'Nenhuma';
 
-        String pilotoSalvo = prefs.getString('piloto_favorito') ?? 'Nenhum';
+        String pilotoSalvo =
+            prefs.getString('${_userPrefix}_piloto') ?? 'Nenhum';
         _pilotoFavorito = _pilotosF1.contains(pilotoSalvo)
             ? pilotoSalvo
             : 'Nenhum';
@@ -95,9 +104,11 @@ class _TelaPerfilState extends State<TelaPerfil> {
 
   Future<void> _salvarDadosPerfil() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('bio_usuario', _bioController.text);
-    await prefs.setString('equipe_favorita', _equipeFavorita);
-    await prefs.setString('piloto_favorito', _pilotoFavorito);
+
+    // Salva os dados na "caixa" exclusiva do utilizador atual
+    await prefs.setString('${_userPrefix}_bio', _bioController.text);
+    await prefs.setString('${_userPrefix}_equipe', _equipeFavorita);
+    await prefs.setString('${_userPrefix}_piloto', _pilotoFavorito);
 
     if (mounted) {
       FocusScope.of(context).unfocus();
