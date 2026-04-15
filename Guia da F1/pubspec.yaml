@@ -63,6 +63,40 @@ flutter:
     - assets/Mapas/Silverstone.png
     - assets/Mapas/Spa-Francorchamps.png
     - assets/Mapas/Suzuka.png
+    - assets/equipes/alpine.png
+    - assets/equipes/astonmartin.png
+    - assets/equipes/audi.png
+    - assets/equipes/cadillac.png
+    - assets/equipes/ferrari.png
+    - assets/equipes/haas.png
+    - assets/equipes/mclaren.jpg
+    - assets/equipes/mercedes.png
+    - assets/equipes/redbull.png
+    - assets/equipes/vcarb.png
+    - assets/equipes/williams.png
+    
+        
+
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 flutter_icons:
   android: true
