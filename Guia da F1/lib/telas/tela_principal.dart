@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'abas_principais.dart';
 import 'telas_secundarias.dart';
 import 'tela_autenticacao.dart';
+import 'tela_perfil.dart';
 
 class TelaPrincipal extends StatefulWidget {
   final Function(bool) aoAlternarTema;
@@ -148,10 +149,14 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
               child: ListView(
                 padding: EdgeInsets.zero,
                 children: [
-                  _menuItem(context, Icons.dashboard, "Painel Principal", () {
-                    Navigator.pop(context);
-                    setState(() => _indiceAtual = 0);
+                  _menuItem(context, Icons.person, "Meu Perfil", () {
+                    Navigator.pop(context); // Fecha o menu lateral
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const TelaPerfil()),
+                    );
                   }),
+                  const Divider(indent: 20, endIndent: 20),
                   _menuItem(
                     context,
                     Icons.newspaper,
