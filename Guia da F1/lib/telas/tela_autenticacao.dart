@@ -39,7 +39,7 @@ class _TelaAutenticacaoState extends State<TelaAutenticacao>
                 image: const AssetImage('assets/WPPF1.jpg'),
                 fit: BoxFit.cover,
                 colorFilter: ColorFilter.mode(
-                  Colors.black.withOpacity(0.75),
+                  Colors.black.withValues(alpha: 0.75),
                   BlendMode.darken,
                 ),
               ),
@@ -294,7 +294,7 @@ class _FormularioState extends State<_Formulario> {
         labelStyle: const TextStyle(color: Colors.white70),
         prefixIcon: Icon(icone, color: Colors.white70),
         filled: true,
-        fillColor: Colors.white.withOpacity(0.15),
+        fillColor: Colors.white.withValues(alpha: 0.15),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15),
           borderSide: BorderSide.none,
