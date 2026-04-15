@@ -382,168 +382,235 @@ class _TelaCalendarioState extends State<TelaCalendario> {
   }
 }
 
-// --- 3. EQUIPES COM HISTÓRIA E EVOLUÇÃO ---
 class TelaEquipes extends StatelessWidget {
   const TelaEquipes({super.key});
 
-  final List<Map<String, dynamic>> _equipesDados = const [
+  // DADOS TÉCNICOS E BIOGRAFIAS RICAS - ERA 2026 (11 EQUIPAS)
+  final List<Map<String, dynamic>> _equipes = const [
     {
-      "nome": "Scuderia Ferrari",
+      "nome": "Scuderia Ferrari HP",
+      "historia":
+          "A equipa mais antiga e icónica da F1 entra na nova era de regulamentos com a dupla mais mediática da história: o heptacampeão Lewis Hamilton e o 'Príncipe de Mónaco', Charles Leclerc. O foco em Maranello está na integração perfeita da nova unidade de potência, visando acabar com o longo jejum de títulos sob o comando de Fred Vasseur.",
+      "cor": Colors.red,
       "base": "Maranello, Itália",
-      "cor": Color(0xFFDC0000),
-      "icone": Icons.shield,
-      "historia":
-          "A única equipe que esteve presente em todas as temporadas da história da Fórmula 1, desde 1950. Fundada pelo comendador Enzo Ferrari, a equipe construiu o maior império do automobilismo. Passou por secas severas de títulos, mas viveu a sua era de ouro no início dos anos 2000 com a hegemonia de Michael Schumacher. É considerada o coração emocional do desporto.",
+      "motor": "Ferrari (2026 Spec)",
+      "titulos": "16 Construtores",
     },
     {
-      "nome": "McLaren Racing",
+      "nome": "Audi F1 Team",
+      "historia":
+          "A aguardada sucessora da histórica Sauber. Marca a entrada titânica do Grupo Volkswagen na Fórmula 1 como equipa de fábrica. Com a contratação do campeão da F2, o brasileiro Gabriel Bortoleto, e a experiência de Nico Hülkenberg, a Audi promete revolucionar a eficiência térmica e elétrica com o seu motor fabricado em Neuburg.",
+      "cor": Colors.blueGrey,
+      "base": "Neuburg, Alemanha / Hinwil, Suíça",
+      "motor": "Audi Powertrains",
+      "titulos": "Estreante",
+    },
+    {
+      "nome": "Cadillac F1 Team",
+      "historia":
+          "A nova e explosiva 11ª equipa do paddock. Representa a entrada massiva da General Motors no Mundial. Liderada pela família Andretti, a Cadillac traz o poder americano para o grid, expandindo o campeonato para 22 carros e prometendo abalar as estruturas das equipas tradicionais desde a primeira corrida.",
+      "cor": Colors.white,
+      "base": "Warren, EUA / Silverstone, RU",
+      "motor": "Cadillac (GM)",
+      "titulos": "Estreante",
+    },
+    {
+      "nome": "McLaren Formula 1 Team",
+      "historia":
+          "Mantendo a linhagem do laranja papaya, a McLaren é o símbolo da estabilidade. Lando Norris e Oscar Piastri formam uma das duplas mais letais do grid. Sob a direção de Andrea Stella, a equipa confia na sua excelência aerodinâmica e no fornecimento da nova geração de motores Mercedes para lutar pelo topo.",
+      "cor": Colors.orange,
       "base": "Woking, Reino Unido",
-      "cor": Color(0xFFE65C00),
-      "icone": Icons.sports_motorsports,
-      "historia":
-          "Fundada em 1966 pelo piloto e engenheiro neozelandês Bruce McLaren. A equipe é eternamente lembrada pelas cores branco e vermelho da era de Ayrton Senna e Alain Prost, onde dominou o desporto. Nos últimos anos, regressou à sua cor original de fundação, o histórico Laranja Papaya, e ressurgiu na grelha através de reestruturações técnicas profundas.",
+      "motor": "Mercedes",
+      "titulos": "8 Construtores",
     },
     {
-      "nome": "Red Bull Racing",
+      "nome": "Oracle Red Bull Racing",
+      "historia":
+          "Uma equipa em profunda transformação. A era pós-Adrian Newey começa com o maior desafio da sua história: fabricar a sua própria unidade de potência em parceria com a Ford (Red Bull Powertrains). Com Max Verstappen ao volante, a equipa tenta provar que consegue dominar o novo regulamento de 2026 e manter a hegemonia que conquistou na década anterior.",
+      "cor": Colors.blue,
       "base": "Milton Keynes, Reino Unido",
-      "cor": Color(0xFF001A30),
-      "icone": Icons.bolt,
-      "historia":
-          "A equipe nasceu após a fabricante de energéticos comprar a fracassada operação da Jaguar em 2005. Liderada pelo gênio da aerodinâmica Adrian Newey, a Red Bull quebrou a tradição de construtoras tradicionais, dominando o desporto com Sebastian Vettel (4 títulos) e posteriormente criando um novo império avassalador com Max Verstappen.",
+      "motor": "Red Bull Ford",
+      "titulos":
+          "6 Construtores", // Títulos de 2010, 2011, 2012, 2013, 2022, 2023
     },
     {
-      "nome": "Mercedes-AMG F1",
-      "base": "Brackley, Reino Unido",
-      "cor": Color(0xFF00A19B),
-      "icone": Icons.adjust,
+      "nome": "Mercedes-AMG PETRONAS",
       "historia":
-          "Embora a Mercedes tenha dominado nos anos 50 com Juan Manuel Fangio, a equipe moderna nasceu da compra da Brawn GP em 2010. Com o início da Era Híbrida (motores V6) em 2014, a Mercedes construiu a maior e mais implacável dinastia da história da F1, conquistando 8 campeonatos consecutivos de construtores, a maioria pelas mãos de Lewis Hamilton.",
+          "O início de um novo capítulo após a saída de Hamilton. George Russell assume o papel de líder, acompanhado pelo prodígio italiano Kimi Antonelli. A Mercedes aposta todas as fichas na sua vasta experiência em motores híbridos para criar a unidade de potência mais forte do novo regulamento de 2026.",
+      "cor": Colors.teal,
+      "base": "Brackley, Reino Unido",
+      "motor": "Mercedes",
+      "titulos": "8 Construtores",
     },
     {
       "nome": "Aston Martin Aramco",
+      "historia":
+          "O projeto bilionário de Lawrence Stroll atinge o seu clímax. Agora com o estatuto de equipa de fábrica da Honda (os mesmos motores que deram o título à Red Bull) e com Adrian Newey nos bastidores desenhando o carro, Fernando Alonso tem a derradeira arma para o seu tão sonhado terceiro título mundial.",
+      "cor": Colors.green,
       "base": "Silverstone, Reino Unido",
-      "cor": Color(0xFF006F62),
-      "icone": Icons.security,
-      "historia":
-          "A lendária marca britânica retornou à F1 em 2021. Liderada pelo bilionário Lawrence Stroll e com investimentos massivos em uma nova fábrica, a equipe busca se estabelecer como uma força dominante nas próximas temporadas, misturando veteranos de peso com infraestrutura de ponta.",
-    },
-    {
-      "nome": "Alpine F1 Team",
-      "base": "Enstone, Reino Unido / Viry, França",
-      "cor": Color(0xFFE83E8C),
-      "icone": Icons.terrain,
-      "historia":
-          "Representante do grupo Renault, a Alpine carrega o orgulho francês na F1. A equipe tem uma história rica (antiga Benetton e Renault), mas passa por um longo processo de reestruturação para tentar voltar aos dias de glória das vitórias de Fernando Alonso nos anos 2000.",
+      "motor": "Honda",
+      "titulos": "Nenhum",
     },
     {
       "nome": "Williams Racing",
-      "base": "Grove, Reino Unido",
-      "cor": Color(0xFF00A0DE),
-      "icone": Icons.speed,
       "historia":
-          "Uma das equipes mais icônicas e tradicionais do grid, ostentando 9 títulos de construtores. Após anos de extremas dificuldades financeiras e de andar no fundo do pelotão, foi comprada por um grupo de investimentos e iniciou um sério projeto de reconstrução a longo prazo.",
+          "O ressurgimento de uma lenda. Com a liderança visionária de James Vowles, a equipa britânica garantiu uma dupla de peso: a agressividade de Alex Albon e a inteligência tática de Carlos Sainz. A Williams foca-se em maximizar a parceria técnica com a Mercedes para voltar aos pódios.",
+      "cor": Colors.indigo,
+      "base": "Grove, Reino Unido",
+      "motor": "Mercedes",
+      "titulos": "9 Construtores",
+    },
+    {
+      "nome": "BWT Alpine F1 Team",
+      "historia":
+          "A equipa francesa passou por intensas reestruturações. Agora apoiada pela dupla Pierre Gasly e o jovem Jack Doohan, a Alpine procura encontrar a consistência que lhe tem faltado, focando-se em extrair o máximo do novo regulamento de chassis para compensar os desafios de desenvolvimento.",
+      "cor": Colors.blueAccent,
+      "base": "Enstone, Reino Unido / Viry, França",
+      "motor": "Alpine",
+      "titulos": "2 Construtores (como Renault)",
+    },
+    {
+      "nome": "MoneyGram Haas F1 Team",
+      "historia":
+          "A equipa americana fortaleceu-se com a sua nova parceria técnica com a Toyota, além dos laços contínuos com a Ferrari. Com a experiência de Esteban Ocon e a rapidez do jovem britânico Oliver Bearman, a Haas tenta deixar definitivamente o fundo do grid.",
+      "cor": Colors.grey,
+      "base": "Kannapolis, EUA / Banbury, RU",
+      "motor": "Ferrari",
+      "titulos": "Nenhum",
     },
     {
       "nome": "Visa Cash App RB",
+      "historia":
+          "A equipa 'irmã' da Red Bull. Serve como o laboratório de excelência para os motores Red Bull-Ford e a plataforma de lançamento para jovens talentos como Yuki Tsunoda e Liam Lawson. O objetivo é competir consistentemente no topo do pelotão intermediário.",
+      "cor": Colors.blueGrey,
       "base": "Faenza, Itália",
-      "cor": Color(0xFF1534F0),
-      "icone": Icons.animation,
-      "historia":
-          "Anteriormente conhecida como Toro Rosso e AlphaTauri, é a equipe coirmã da Red Bull. Tradicionalmente usada como um laboratório para revelar jovens talentos das categorias de base, hoje busca ter uma identidade própria e maior competitividade no meio do pelotão.",
-    },
-    {
-      "nome": "Haas F1 Team",
-      "base": "Kannapolis, EUA",
-      "cor": Color(0xFFB71C1C),
-      "icone": Icons.flag,
-      "historia":
-          "A única equipe americana no grid. Fundada por Gene Haas, adota um modelo de negócios único, comprando o máximo de peças permitidas diretamente da Ferrari para reduzir custos. Conhecida por sua resiliência e por fazer muito com um dos menores orçamentos da F1.",
-    },
-    {
-      "nome": "Stake F1 Team Kick Sauber",
-      "base": "Hinwil, Suíça",
-      "cor": Color(0xFF00E701),
-      "icone": Icons.casino,
-      "historia":
-          "A histórica equipe independente Sauber está em um profundo período de transição. Após correr alguns anos sob o nome Alfa Romeo, a estrutura suíça prepara o terreno para ser assumida integralmente pela Audi em 2026, transformando-se em uma equipe de fábrica alemã.",
+      "motor": "Red Bull Ford",
+      "titulos": "Nenhum",
     },
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Garagem das Equipes")),
+      appBar: AppBar(
+        title: const Text(
+          "Paddock 2026",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+      ),
       body: ListView.builder(
         padding: const EdgeInsets.all(16),
-        itemCount: _equipesDados.length,
+        itemCount: _equipes.length,
         itemBuilder: (context, index) {
-          final eq = _equipesDados[index];
-          return _equipeCard(context, eq);
-        },
-      ),
-    );
-  }
-
-  Widget _equipeCard(BuildContext context, Map<String, dynamic> eq) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 16),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(16),
-        onTap: () => Navigator.push(
-          context,
-          MaterialPageRoute(builder: (_) => TelaPerfilEquipe(equipe: eq)),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            children: [
-              Container(
-                width: 60,
-                height: 60,
-                decoration: BoxDecoration(
-                  color: eq['cor'],
-                  shape: BoxShape.circle,
-                  boxShadow: const [
-                    BoxShadow(color: Colors.black26, blurRadius: 6),
-                  ],
+          final eq = _equipes[index];
+          return Card(
+            elevation: 6,
+            margin: const EdgeInsets.only(bottom: 16),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: ExpansionTile(
+              leading: CircleAvatar(
+                backgroundColor: eq['cor'],
+                radius: 20,
+                child: Text(
+                  eq['nome'][0],
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-                child: Icon(eq['icone'], color: Colors.white, size: 30),
               ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      eq['nome'],
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
+              title: Text(
+                eq['nome'],
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 17,
+                ),
+              ),
+              subtitle: Text(
+                "Motor: ${eq['motor']}",
+                style: TextStyle(color: Colors.red.shade400),
+              ),
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Row(
+                        children: [
+                          Icon(
+                            Icons.info_outline,
+                            color: Colors.white70,
+                            size: 18,
+                          ),
+                          SizedBox(width: 8),
+                          Text(
+                            "História e Perspetiva 2026",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                    const SizedBox(height: 4),
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.location_on,
-                          size: 14,
-                          color: Colors.grey,
+                      const SizedBox(height: 10),
+                      Text(
+                        eq['historia'],
+                        style: const TextStyle(
+                          height: 1.6,
+                          fontSize: 14,
+                          color: Colors.white70,
                         ),
-                        const SizedBox(width: 4),
-                        Text(
-                          eq['base'],
-                          style: const TextStyle(color: Colors.grey),
-                        ),
-                      ],
-                    ),
-                  ],
+                      ),
+                      const SizedBox(height: 16),
+                      const Divider(color: Colors.white24),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.emoji_events,
+                                color: Colors.amber,
+                                size: 18,
+                              ),
+                              const SizedBox(width: 6),
+                              Text(
+                                eq['titulos'],
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.location_on,
+                                color: Colors.red,
+                                size: 18,
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                eq['base'].toString().split(',')[0],
+                                style: const TextStyle(
+                                  fontStyle: FontStyle.italic,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              Icon(Icons.arrow_forward_ios, color: eq['cor'], size: 16),
-            ],
-          ),
-        ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }
